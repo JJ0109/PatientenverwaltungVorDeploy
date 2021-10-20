@@ -1,0 +1,1991 @@
+{
+  "namespace": "slah.db",
+  "definitions": {
+    "slah.db.Url": {
+      "kind": "type",
+      "type": "cds.String"
+    },
+    "slah.db.Patient": {
+      "kind": "entity",
+      "includes": [
+        "managed",
+        "cuid"
+      ],
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "ID": {
+          "@Core.Computed": true,
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "patientenID": {
+          "@FieldControl.Mandatory": true,
+          "@title": "Patienten ID",
+          "type": "cds.String",
+          "length": 15
+        },
+        "versichertenNr": {
+          "@FieldControl.Mandatory": true,
+          "@title": "VersichertenNr",
+          "@assert.range": [
+            0,
+            1000
+          ],
+          "type": "cds.String",
+          "length": 20
+        },
+        "gesetzVers": {
+          "@title": "GesetzVers",
+          "type": "cds.Boolean"
+        },
+        "krankenkasse": {
+          "@title": "Krankenkasse",
+          "type": "cds.String",
+          "length": 30
+        },
+        "patientNrKIS": {
+          "@title": "PatientNrKIS",
+          "type": "cds.String",
+          "length": 20
+        },
+        "anrede": {
+          "@FieldControl.Mandatory": true,
+          "@title": "Anrede",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "slah.db.typAnrede",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "titel": {
+          "@title": "Titel",
+          "type": "cds.String",
+          "length": 20
+        },
+        "vorname": {
+          "@FieldControl.Mandatory": true,
+          "@title": "Vorname",
+          "type": "cds.String",
+          "length": 45
+        },
+        "nachname": {
+          "@FieldControl.Mandatory": true,
+          "@title": "Nachname",
+          "type": "cds.String",
+          "length": 45
+        },
+        "gebDatum": {
+          "@FieldControl.Mandatory": true,
+          "@title": "Geburtsdatum",
+          "type": "cds.Date"
+        },
+        "geschlecht": {
+          "@FieldControl.Mandatory": true,
+          "@title": "Geschlecht",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "slah.db.typGeschlecht",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "adresse": {
+          "type": "slah.db.Adressdaten",
+          "elements": {
+            "land": {
+              "@title": "Land",
+              "type": "cds.Association",
+              "cardinality": {
+                "max": 1
+              },
+              "target": "slah.db.typLand",
+              "keys": [
+                {
+                  "ref": [
+                    "code"
+                  ]
+                }
+              ]
+            },
+            "postleitzahl": {
+              "@title": "Postleitzahl",
+              "type": "cds.String",
+              "length": 10
+            },
+            "ort": {
+              "@title": "Ort",
+              "type": "cds.String",
+              "length": 40
+            },
+            "strasse": {
+              "@title": "Strasse",
+              "type": "cds.String",
+              "length": 45
+            },
+            "hausnr": {
+              "@title": "Hausnr",
+              "type": "cds.String",
+              "length": 9
+            },
+            "zusatz": {
+              "@title": "Zusatz",
+              "type": "cds.String",
+              "length": 40
+            },
+            "postfach": {
+              "@title": "Postfach",
+              "type": "cds.String",
+              "length": 8
+            }
+          }
+        },
+        "kontakt": {
+          "type": "slah.db.Kontakdaten"
+        },
+        "datenschutz1": {
+          "@title": "Datenschutz1",
+          "type": "cds.Boolean"
+        },
+        "lastChangedDatenschutz": {
+          "@title": "LastChangedDatenschutz",
+          "type": "cds.DateTime"
+        }
+      }
+    },
+    "slah.db.Adressdaten": {
+      "kind": "type",
+      "elements": {
+        "land": {
+          "@title": "Land",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "slah.db.typLand",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "postleitzahl": {
+          "@title": "Postleitzahl",
+          "type": "cds.String",
+          "length": 10
+        },
+        "ort": {
+          "@title": "Ort",
+          "type": "cds.String",
+          "length": 40
+        },
+        "strasse": {
+          "@title": "Strasse",
+          "type": "cds.String",
+          "length": 45
+        },
+        "hausnr": {
+          "@title": "Hausnr",
+          "type": "cds.String",
+          "length": 9
+        },
+        "zusatz": {
+          "@title": "Zusatz",
+          "type": "cds.String",
+          "length": 40
+        },
+        "postfach": {
+          "@title": "Postfach",
+          "type": "cds.String",
+          "length": 8
+        }
+      }
+    },
+    "slah.db.Kontakdaten": {
+      "kind": "type",
+      "elements": {
+        "telefonnummer": {
+          "@title": "Telefonnummer",
+          "type": "cds.String",
+          "length": 20
+        },
+        "mobilnummer": {
+          "@title": "Mobilnummer",
+          "type": "cds.String",
+          "length": 20
+        },
+        "fax": {
+          "@title": "Fax",
+          "type": "cds.String",
+          "length": 20
+        },
+        "email": {
+          "@FieldControl.Mandatory": true,
+          "@title": "Email",
+          "type": "cds.String",
+          "length": 60
+        }
+      }
+    },
+    "slah.db.typGeschlecht": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "weiblich": {
+              "val": "w"
+            },
+            "maennlich": {
+              "val": "m"
+            },
+            "diverse": {
+              "val": "d"
+            },
+            "unbekannt": {
+              "val": "u"
+            },
+            "unbestimmt": {
+              "val": "x"
+            }
+          }
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "slah.db.typGeschlecht.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "slah.db.typGeschlecht.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "slah.db.typAnrede": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Frau": {
+              "val": "F"
+            },
+            "Herr": {
+              "val": "H"
+            },
+            "FrauHerr": {
+              "val": "FH"
+            }
+          }
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "slah.db.typAnrede.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "slah.db.typAnrede.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "slah.db.typLand": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Deutschland": {
+              "val": "DE"
+            },
+            "USA": {
+              "val": "USA"
+            },
+            "England": {
+              "val": "GBT"
+            },
+            "Spanien": {
+              "val": "ESP"
+            },
+            "Fankreich": {
+              "val": "FRA"
+            }
+          }
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "slah.db.typLand.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "slah.db.typLand.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "patientservice": {
+      "@source": "patientservice.cds",
+      "kind": "service"
+    },
+    "patientservice.PatientenSet": {
+      "kind": "entity",
+      "@odata.draft.enabled": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "slah.db.Patient"
+          ]
+        }
+      },
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "ID": {
+          "@Core.Computed": true,
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "patientenID": {
+          "@FieldControl.Mandatory": true,
+          "@title": "Patienten ID",
+          "type": "cds.String",
+          "length": 15
+        },
+        "versichertenNr": {
+          "@FieldControl.Mandatory": true,
+          "@title": "VersichertenNr",
+          "@assert.range": [
+            0,
+            1000
+          ],
+          "type": "cds.String",
+          "length": 20
+        },
+        "gesetzVers": {
+          "@title": "GesetzVers",
+          "type": "cds.Boolean"
+        },
+        "krankenkasse": {
+          "@title": "Krankenkasse",
+          "type": "cds.String",
+          "length": 30
+        },
+        "patientNrKIS": {
+          "@title": "PatientNrKIS",
+          "type": "cds.String",
+          "length": 20
+        },
+        "anrede": {
+          "@FieldControl.Mandatory": true,
+          "@title": "Anrede",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "patientservice.typAnrede",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "titel": {
+          "@title": "Titel",
+          "type": "cds.String",
+          "length": 20
+        },
+        "vorname": {
+          "@FieldControl.Mandatory": true,
+          "@title": "Vorname",
+          "type": "cds.String",
+          "length": 45
+        },
+        "nachname": {
+          "@FieldControl.Mandatory": true,
+          "@title": "Nachname",
+          "type": "cds.String",
+          "length": 45
+        },
+        "gebDatum": {
+          "@FieldControl.Mandatory": true,
+          "@title": "Geburtsdatum",
+          "type": "cds.Date"
+        },
+        "geschlecht": {
+          "@FieldControl.Mandatory": true,
+          "@title": "Geschlecht",
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "patientservice.typGeschlecht",
+          "keys": [
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "adresse": {
+          "type": "slah.db.Adressdaten",
+          "elements": {
+            "land": {
+              "@title": "Land",
+              "type": "cds.Association",
+              "cardinality": {
+                "max": 1
+              },
+              "target": "patientservice.typLand",
+              "keys": [
+                {
+                  "ref": [
+                    "code"
+                  ]
+                }
+              ]
+            },
+            "postleitzahl": {
+              "@title": "Postleitzahl",
+              "type": "cds.String",
+              "length": 10
+            },
+            "ort": {
+              "@title": "Ort",
+              "type": "cds.String",
+              "length": 40
+            },
+            "strasse": {
+              "@title": "Strasse",
+              "type": "cds.String",
+              "length": 45
+            },
+            "hausnr": {
+              "@title": "Hausnr",
+              "type": "cds.String",
+              "length": 9
+            },
+            "zusatz": {
+              "@title": "Zusatz",
+              "type": "cds.String",
+              "length": 40
+            },
+            "postfach": {
+              "@title": "Postfach",
+              "type": "cds.String",
+              "length": 8
+            }
+          }
+        },
+        "kontakt": {
+          "type": "slah.db.Kontakdaten"
+        },
+        "datenschutz1": {
+          "@title": "Datenschutz1",
+          "type": "cds.Boolean"
+        },
+        "lastChangedDatenschutz": {
+          "@title": "LastChangedDatenschutz",
+          "type": "cds.DateTime"
+        }
+      }
+    },
+    "Language": {
+      "kind": "type",
+      "@title": "{i18n>Language}",
+      "@description": "{i18n>LanguageCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Languages",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "Currency": {
+      "kind": "type",
+      "@title": "{i18n>Currency}",
+      "@description": "{i18n>CurrencyCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Currencies",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "Country": {
+      "kind": "type",
+      "@title": "{i18n>Country}",
+      "@description": "{i18n>CountryCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Countries",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "sap.common": {
+      "kind": "context"
+    },
+    "sap.common.Languages": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>LanguageCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Languages.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Languages.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.Countries": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.Currencies": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "symbol": {
+          "@title": "{i18n>CurrencySymbol}",
+          "type": "cds.String",
+          "length": 5
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.CodeList": {
+      "kind": "aspect",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        }
+      }
+    },
+    "cuid": {
+      "kind": "aspect",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        }
+      }
+    },
+    "managed": {
+      "kind": "aspect",
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "type": "User",
+          "length": 255
+        }
+      }
+    },
+    "temporal": {
+      "kind": "aspect",
+      "elements": {
+        "validFrom": {
+          "@cds.valid.from": true,
+          "type": "cds.Timestamp"
+        },
+        "validTo": {
+          "@cds.valid.to": true,
+          "type": "cds.Timestamp"
+        }
+      }
+    },
+    "User": {
+      "kind": "type",
+      "@title": "{i18n>UserID}",
+      "@description": "{i18n>UserID.Description}",
+      "type": "cds.String",
+      "length": 255
+    },
+    "slah.db.typGeschlecht.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "weiblich": {
+              "val": "w"
+            },
+            "maennlich": {
+              "val": "m"
+            },
+            "diverse": {
+              "val": "d"
+            },
+            "unbekannt": {
+              "val": "u"
+            },
+            "unbestimmt": {
+              "val": "x"
+            }
+          }
+        }
+      }
+    },
+    "slah.db.typAnrede.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Frau": {
+              "val": "F"
+            },
+            "Herr": {
+              "val": "H"
+            },
+            "FrauHerr": {
+              "val": "FH"
+            }
+          }
+        }
+      }
+    },
+    "slah.db.typLand.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Deutschland": {
+              "val": "DE"
+            },
+            "USA": {
+              "val": "USA"
+            },
+            "England": {
+              "val": "GBT"
+            },
+            "Spanien": {
+              "val": "ESP"
+            },
+            "Fankreich": {
+              "val": "FRA"
+            }
+          }
+        }
+      }
+    },
+    "sap.common.Languages.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>LanguageCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        }
+      }
+    },
+    "sap.common.Countries.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "sap.common.Currencies.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "patientservice.typAnrede": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "slah.db.typAnrede"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Frau": {
+              "val": "F"
+            },
+            "Herr": {
+              "val": "H"
+            },
+            "FrauHerr": {
+              "val": "FH"
+            }
+          }
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "patientservice.typAnrede.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "patientservice.typAnrede.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "patientservice.typGeschlecht": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "slah.db.typGeschlecht"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "weiblich": {
+              "val": "w"
+            },
+            "maennlich": {
+              "val": "m"
+            },
+            "diverse": {
+              "val": "d"
+            },
+            "unbekannt": {
+              "val": "u"
+            },
+            "unbestimmt": {
+              "val": "x"
+            }
+          }
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "patientservice.typGeschlecht.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "patientservice.typGeschlecht.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "patientservice.typLand": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "projection": {
+        "from": {
+          "ref": [
+            "slah.db.typLand"
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Deutschland": {
+              "val": "DE"
+            },
+            "USA": {
+              "val": "USA"
+            },
+            "England": {
+              "val": "GBT"
+            },
+            "Spanien": {
+              "val": "ESP"
+            },
+            "Fankreich": {
+              "val": "FRA"
+            }
+          }
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "patientservice.typLand.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "patientservice.typLand.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "patientservice.typAnrede.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "slah.db.typAnrede.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Frau": {
+              "val": "F"
+            },
+            "Herr": {
+              "val": "H"
+            },
+            "FrauHerr": {
+              "val": "FH"
+            }
+          }
+        }
+      }
+    },
+    "patientservice.typGeschlecht.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "slah.db.typGeschlecht.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "weiblich": {
+              "val": "w"
+            },
+            "maennlich": {
+              "val": "m"
+            },
+            "diverse": {
+              "val": "d"
+            },
+            "unbekannt": {
+              "val": "u"
+            },
+            "unbestimmt": {
+              "val": "x"
+            }
+          }
+        }
+      }
+    },
+    "patientservice.typLand.texts": {
+      "kind": "entity",
+      "@cds.autoexposed": true,
+      "@odata.draft.enabled": false,
+      "projection": {
+        "from": {
+          "ref": [
+            "slah.db.typLand.texts"
+          ]
+        }
+      },
+      "elements": {
+        "locale": {
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "key": true,
+          "type": "cds.String",
+          "enum": {
+            "Deutschland": {
+              "val": "DE"
+            },
+            "USA": {
+              "val": "USA"
+            },
+            "England": {
+              "val": "GBT"
+            },
+            "Spanien": {
+              "val": "ESP"
+            },
+            "Fankreich": {
+              "val": "FRA"
+            }
+          }
+        }
+      }
+    }
+  },
+  "meta": {
+    "creator": "CDS Compiler v2.7.0",
+    "flavor": "inferred"
+  },
+  "$version": "2.0"
+}
